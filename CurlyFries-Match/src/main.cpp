@@ -5,8 +5,6 @@ using namespace vex;
 competition Competition;
 /////
 
-//Made by 1970R
-
 /*  IMPORTANT INFO
   > Control Schemes
     > TANK
@@ -24,9 +22,6 @@ competition Competition;
 //Constants
 const color palette[2][2] = {{ClrNavy, ClrMaroon}, {ClrMaroon, ClrNavy}}; //{bg color, accent color}
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
-const double wheelCircumference = 13; //in inches
-const double driveRadius = 5.5; //in inches
-const double turn90 = driveRadius * 3.1416; //approximately π //not in use
 /////
 
 //Settings
@@ -220,7 +215,7 @@ void switchLock(void) {
 }
 /////
 
-//Pneumatics
+//Pneumatics //Not in use right now
 void flipWings() {
   if (SolenoidPair.value() == false) {
     SolenoidPair = true;
@@ -248,7 +243,7 @@ void buttons() {
 /////
 
 /*
-//Hold Catapult Still
+//Hold Catapult Still //Not in use
 void brakingMech() {
   if (Controller1.ButtonL2.pressing()) {
     CatapultL.setStopping(hold);
@@ -261,9 +256,7 @@ void brakingMech() {
 */
 
 //Drive Shortcut
-void driveUp(double lInches, double rInches) {
-  double lDrive = lInches / wheelCircumference; 
-  double rDrive = rInches / wheelCircumference;
+void driveUp(double lDrive, double rDrive) {
   
   FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
   MidL.spinFor(fwd,(360 * lDrive), degrees, false);
@@ -271,16 +264,6 @@ void driveUp(double lInches, double rInches) {
   FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
   MidR.spinFor(fwd, (360 * rDrive), degrees, false);
   BackR.spinFor(fwd, (360 * rDrive), degrees, true);
-}
-/////
-
-//Quick Drive Shortcuts (For Teammates)
-void driveForward(double inches) { 
-  driveUp(inches, inches); //Negative numbers are backwards
-}
-
-void turnRight(int turnDegrees) {
-  driveUp(turnDegrees * (turn90 / 90), 0 - (turnDegrees * (turn90 / 90))); //Positive is Clockwise, Negative is Counterclockwise
 }
 /////
 

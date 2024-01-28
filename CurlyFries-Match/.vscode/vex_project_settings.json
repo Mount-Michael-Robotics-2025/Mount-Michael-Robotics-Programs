@@ -2,7 +2,7 @@
 	"project": {
 		"name": "CurlyFries-Match-VScode",
 		"slot": 8,
-		"description": "testing VScode import",
+		"description": "Main match program",
 		"platform": "V5",
 		"creationDate": "Sat, 27 Jan 2024 15:12:08 GMT",
 		"language": "cpp",
