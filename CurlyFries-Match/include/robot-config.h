@@ -10,7 +10,6 @@ extern motor BackL;
 extern motor FrontR;
 extern motor MidR;
 extern motor BackR;
-extern motor CatapultL;
 extern digital_out SolenoidPair;
 
 /**

@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "test-ui-library.cpp"
 
 using namespace vex;
 
@@ -26,12 +27,14 @@ const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 
 //Settings
 int team = 0;
+color paletteCurrent[2] = {palette[team][0], palette[team][1]};
 int autonMode = 0; 
 int controlMode = 0;
 int lockButtons = 0;
 /////
 
 //Onscreen Buttons and Sliders
+
 void buttonTeam() {
   Brain.Screen.setPenColor(palette[team][1]);
   Brain.Screen.setFillColor(palette[team][1]);
@@ -172,8 +175,9 @@ void (*ctrl_symbol[3])() = {TANK, ARCA, _RC_};
 
 //Draw UI
 void art() {
-  /*
   Brain.Screen.clearScreen(palette[team][0]);
+  paletteCurrent[0] = palette[team][0];
+  paletteCurrent[1] = palette[team][1];
 
   buttonTeam();
   buttonAuton();
@@ -183,7 +187,6 @@ void art() {
   uiText();
 
   ctrl_symbol[controlMode]();
-  */
 }
 /////
 
@@ -247,9 +250,12 @@ void buttons() {
 void brakingMech() {
   if (Controller1.ButtonL2.pressing()) {
     CatapultL.setStopping(hold);
+    CatapultR.setStopping(hold);
     CatapultL.stop();
+    CatapultR.stop();
   } else {
     CatapultL.setStopping(brake);
+    CatapultR.setStopping(brake);
   }
 }
 /////
@@ -353,7 +359,6 @@ void userControl(void) {
     FrontR.spin(fwd, trainRVolt, voltageUnits::volt);
     MidR.spin(fwd, trainRVolt, voltageUnits::volt);
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
-    CatapultL.spin(fwd, 100 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), pct);
     wait(20, msec);
     }
 }

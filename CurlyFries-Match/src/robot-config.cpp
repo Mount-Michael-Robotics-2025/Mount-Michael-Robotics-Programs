@@ -14,7 +14,6 @@ motor BackL = motor(PORT6, ratio18_1, false);
 motor FrontR = motor(PORT13, ratio18_1, true);
 motor MidR = motor(PORT15, ratio18_1, true);
 motor BackR = motor(PORT5, ratio18_1, true);
-motor CatapultL = motor(PORT1, ratio18_1, false);
 digital_out SolenoidPair = digital_out(Brain.ThreeWirePort.C);
 controller Controller1 = controller(primary);
 
