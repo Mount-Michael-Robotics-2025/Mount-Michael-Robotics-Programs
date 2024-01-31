@@ -22,6 +22,8 @@ competition Competition;
 
 //Constants
 const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
+const char paletteName[2][6] = {"POLAR", "MOUNT"};
+const char autonName[2][5] = {"NEAR", "AWAY"};
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 /////
 
@@ -174,6 +176,38 @@ void (*ctrl_symbol[3])() = {TANK, ARCA, _RC_};
 /////
 
 //Draw UI
+void controllerInfo() {
+  if (lockButtons == 0) {
+    char message[100];
+    Controller1.Screen.setCursor(0, 0);
+    strcpy(message, "(X) Color: ");
+    strcat(message, paletteName[team]);
+    Controller1.Screen.print(message);
+    Controller1.Screen.newLine();
+    strcpy(message, "(A) Auton: ");
+    strcat(message, autonName[autonMode]);
+    Controller1.Screen.print(message);
+    Controller1.Screen.newLine();
+    strcpy(message, "(B) Control: ");
+    strcat(message, controlName[controlMode]);
+    Controller1.Screen.print(message);
+  } else {
+    char message[100];
+    Controller1.Screen.setCursor(0, 0);
+    strcpy(message, "(Y) Color: ");
+    strcat(message, paletteName[team]);
+    Controller1.Screen.print(message);
+    Controller1.Screen.newLine();
+    strcpy(message, "(Y) Auton: ");
+    strcat(message, autonName[autonMode]);
+    Controller1.Screen.print(message);
+    Controller1.Screen.newLine();
+    strcpy(message, "(Y) Control: ");
+    strcat(message, controlName[controlMode]);
+    Controller1.Screen.print(message);
+  }
+}
+
 void art() {
   Brain.Screen.clearScreen(palette[team][0]);
   paletteCurrent[0] = palette[team][0];
@@ -187,6 +221,8 @@ void art() {
   uiText();
 
   ctrl_symbol[controlMode]();
+
+  controllerInfo();
 }
 /////
 
