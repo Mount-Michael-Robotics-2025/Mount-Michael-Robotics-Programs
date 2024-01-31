@@ -21,7 +21,7 @@ competition Competition;
 */
 
 //Constants
-const color palette[2][2] = {{ClrNavy, ClrMaroon}, {ClrMaroon, ClrNavy}}; //{bg color, accent color}
+const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 /////
 
