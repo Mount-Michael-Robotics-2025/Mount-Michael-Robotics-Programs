@@ -23,7 +23,7 @@ competition Competition;
 //Constants
 const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
 const char paletteName[2][6] = {"POLAR", "MOUNT"};
-const char autonName[2][5] = {"NEAR", "AWAY"};
+const char autonName[2][5] = {"AWAY", "NEAR"};
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 /////
 
@@ -36,82 +36,22 @@ int lockButtons = 0;
 /////
 
 //Onscreen Buttons and Sliders
+void switchTeams();
+brainArt::sliderHorizontal teamButton(341, 41, 40, 20, 2, &team, &paletteCurrent[0], &paletteCurrent[1], &switchTeams);
 
-void buttonTeam() {
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(341, 21, 40, 41);
-  Brain.Screen.drawCircle(341, 41, 20);
-  Brain.Screen.drawCircle(381, 41, 20);
-  Brain.Screen.setPenColor(palette[team][0]);
-  Brain.Screen.setFillColor(palette[team][0]);
-  Brain.Screen.drawRectangle(341, 23, 40, 37);
-  Brain.Screen.drawCircle(341, 41, 18);
-  Brain.Screen.drawCircle(381, 41, 18);
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(341, 37, 40, 9);
-  Brain.Screen.drawCircle(341, 41, 4);
-  Brain.Screen.drawCircle(381, 41, 4);
-  Brain.Screen.drawCircle(341 + (team * 40), 41, 14);
-}
+void switchAuton();
+brainArt::sliderVertical autonButton(441, 101, 40, 20, 2, &autonMode, &paletteCurrent[0], &paletteCurrent[1], &switchAuton);
 
-void buttonAuton() {
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(421, 101, 41, 40);
-  Brain.Screen.drawCircle(441, 101, 20);
-  Brain.Screen.drawCircle(441, 141, 20);
-  Brain.Screen.setPenColor(palette[team][0]);
-  Brain.Screen.setFillColor(palette[team][0]);
-  Brain.Screen.drawRectangle(423, 101, 37, 40);
-  Brain.Screen.drawCircle(441, 101, 18);
-  Brain.Screen.drawCircle(441, 141, 18);
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(437, 101, 9, 40);
-  Brain.Screen.drawCircle(441, 101, 4);
-  Brain.Screen.drawCircle(441, 141, 4);
-  Brain.Screen.drawCircle(441, 101 + (40 * autonMode), 14);
-}
-
-void buttonControl() {
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(341, 181, 40, 41);
-  Brain.Screen.drawCircle(341, 201, 20);
-  Brain.Screen.drawCircle(381, 201, 20);
-  Brain.Screen.setPenColor(palette[team][0]);
-  Brain.Screen.setFillColor(palette[team][0]);
-  Brain.Screen.drawRectangle(341, 183, 40, 37);
-  Brain.Screen.drawCircle(341, 201, 18);
-  Brain.Screen.drawCircle(381, 201, 18);
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(341, 185, 40, 33);
-  Brain.Screen.drawCircle(341, 201, 16);
-  Brain.Screen.drawCircle(381, 201, 16);
+void switchControls();
+void writeControls() {
   Brain.Screen.setPenColor(palette[team][0]);
   Brain.Screen.setFont(mono20);
   Brain.Screen.printAt(341, 207, true, controlName[controlMode]);
 }
+brainArt::buttonHorizontal controlButton(341, 201, 40, 20, &paletteCurrent[0], &paletteCurrent[1], &writeControls, &switchControls);
 
-void buttonLock() {
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(261, 101, 41, 40);
-  Brain.Screen.drawCircle(281, 101, 20);
-  Brain.Screen.drawCircle(281, 141, 20);
-  Brain.Screen.setPenColor(palette[team][0]);
-  Brain.Screen.setFillColor(palette[team][0]);
-  Brain.Screen.drawRectangle(263, 101, 37, 40);
-  Brain.Screen.drawCircle(281, 101, 18);
-  Brain.Screen.drawCircle(281, 141, 18);
-  Brain.Screen.setPenColor(palette[team][1]);
-  Brain.Screen.setFillColor(palette[team][1]);
-  Brain.Screen.drawRectangle(265, 101, 33, 40);
-  Brain.Screen.drawCircle(281, 101, 16);
-  Brain.Screen.drawCircle(281, 141, 16);
+void switchLock();
+void drawLock() {
   Brain.Screen.setPenColor(palette[team][0]);
   Brain.Screen.setFillColor(palette[team][0]);
   Brain.Screen.drawCircle(281, 110, 8);
@@ -131,6 +71,7 @@ void buttonLock() {
     Brain.Screen.drawRectangle(281, 110, 9, 8);
   }
 }
+brainArt::buttonVertical lockButton(281, 101, 40, 20, &paletteCurrent[0], &paletteCurrent[1], &drawLock, &switchLock);
 /////
 
 //UI Text
@@ -213,10 +154,10 @@ void art() {
   paletteCurrent[0] = palette[team][0];
   paletteCurrent[1] = palette[team][1];
 
-  buttonTeam();
-  buttonAuton();
-  buttonControl();
-  buttonLock();
+  teamButton.drawToScreen();
+  autonButton.drawToScreen();
+  controlButton.drawToScreen();
+  lockButton.drawToScreen();
 
   uiText();
 
@@ -266,18 +207,10 @@ void flipWings() {
 
 //Onscreen Button Handler
 void buttons() {
-  if (Brain.Screen.xPosition() > 320 && Brain.Screen.yPosition() < 60) {
-    switchTeams();
-  }
-  if (Brain.Screen.xPosition() > 420 && Brain.Screen.yPosition() > 80 && Brain.Screen.yPosition() < 160) {
-    switchAuton();
-  }
-  if (Brain.Screen.xPosition() > 320 && Brain.Screen.yPosition() > 180) {
-    switchControls();
-  }
-  if (Brain.Screen.xPosition() > 280 && Brain.Screen.xPosition() < 320 && Brain.Screen.yPosition() > 80 && Brain.Screen.yPosition() < 160) {
-    switchLock();
-  }
+  teamButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
+  autonButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
+  controlButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
+  lockButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
 }
 /////
 
