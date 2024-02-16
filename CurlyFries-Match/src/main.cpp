@@ -238,7 +238,7 @@ void driveUp(double lDrive, double rDrive) {
   BackL.spinFor(fwd, (360 * lDrive), degrees, false);
   FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
   MidR.spinFor(fwd, (360 * rDrive), degrees, false);
-  BackR.spinFor(fwd, (360 * rDrive), degrees, true);
+  BackR.spinFor(fwd, (360 * rDrive), degrees);
 }
 /////
 
@@ -251,8 +251,8 @@ void autonClose() {
   MidR.setVelocity(50, pct);
   BackR.setVelocity(50, pct);
 
-  driveUp(30, 30);
-  driveUp(-20, -20);
+  driveUp(3, 3);
+  driveUp(-2, -2);
 
   FrontL.setVelocity(100, pct);
   MidL.setVelocity(100, pct);
@@ -270,8 +270,9 @@ void autonFar() {
   MidR.setVelocity(50, pct);
   BackR.setVelocity(50, pct);
 
-  driveUp(70, 70);
-
+  driveUp(6, 6);
+  driveUp(-2, -2);
+  
   FrontL.setVelocity(100, pct);
   MidL.setVelocity(100, pct);
   BackL.setVelocity(100, pct);
@@ -307,7 +308,7 @@ void autonomous(void) {
   } else {
     autonFar();
   }
-  flipWings();
+  //flipWings();
 }
 /////
 
@@ -315,11 +316,18 @@ void autonomous(void) {
 void userControl(void) {
   while (true) {
     //Control
-    int trainL[3] = {Controller1.Axis3.value(), (Controller1.Axis3.value() + (Controller1.Axis4.value() * 2 / 3)), (Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3))};
-    int trainR[3] = {Controller1.Axis2.value(), (Controller1.Axis3.value() - (Controller1.Axis4.value() * 2 / 3)), (Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3))};
+    int trainL[3] = {Controller1.Axis3.value(),
+    (Controller1.Axis3.value() + (Controller1.Axis4.value() * 2 / 3)),
+    (Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3))};
+    int trainR[3] = {Controller1.Axis2.value(),
+    (Controller1.Axis3.value() - (Controller1.Axis4.value() * 2 / 3)),
+    (Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3))};
 
-    int trainLVolt = 0.12 * trainL[controlMode];
-    int trainRVolt = 0.12 * trainR[controlMode];
+    bool reverseDrive = Controller1.ButtonL1.pressing();
+
+    int trainLVolt = 0.12 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
+    int trainRVolt = 0.12 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
+    int flyVolt = 12 * Controller1.ButtonR2.pressing();
 
     //Spin
     FrontL.spin(fwd, trainLVolt, voltageUnits::volt);
@@ -328,6 +336,7 @@ void userControl(void) {
     FrontR.spin(fwd, trainRVolt, voltageUnits::volt);
     MidR.spin(fwd, trainRVolt, voltageUnits::volt);
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
+    FlyWheel.spin(fwd, flyVolt, voltageUnits::volt);
     wait(20, msec);
     }
 }
