@@ -1,8 +1,8 @@
 {
 	"project": {
-		"name": "CurlyFries-Match-VScode",
-		"slot": 1,
-		"description": "Main match program",
+		"name": "CurlyFries-Skills-VScode",
+		"slot": 2,
+		"description": "Auton Skills Program",
 		"platform": "V5",
 		"creationDate": "Sat, 27 Jan 2024 15:12:08 GMT",
 		"language": "cpp",
