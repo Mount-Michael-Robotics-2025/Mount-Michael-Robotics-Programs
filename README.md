@@ -7,3 +7,7 @@
 #### 01/27/24 
 - Published program to Github
 - Added README
+
+#### 02/27/24
+- Redid comments
+- Added wing controls
