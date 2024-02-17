@@ -14,6 +14,9 @@
 > - Added controller display
 > - Tweaked palettes
 
+> #### 02/16/24
+> - Added skills auton
+
 > #### 02/17/24
 > - Redid comments
 > - Added wing controls
