@@ -1,5 +1,5 @@
 #include "vex.h"
-#include "test-ui-library.cpp"
+#include "ui-library-v1.cpp"
 
 using namespace vex;
 
@@ -7,17 +7,36 @@ competition Competition;
 /////
 
 /*  IMPORTANT INFO
+  > Main 4 settings mapped to ABXY controller buttons
+    > Settings displayed on brain screen and controller screen
+    > (A) Auton
+      > Changes auton based off of starting location on field
+      > Currently no difference
+    > (B) Control
+      > Switches how movement is handled
+      > Refer to below control schemes
+    > (X) Team
+      > Purely cosmetic
+    > (Y) Lock
+      > Disables all other buttons, preventing accidental presses mid match
+      > Represented on controller by replacing screen button symbols with (Y)
+  
   > Control Schemes
     > TANK
+      > Joysticks control drivetrain sides independently
+      > Best for testing
       > L: [Axis 3]
       > R: [Axis 2]
     > ARCA (arcade)
-      > L: [Axis 3] + ([Axis 4] / 2)
-      > R: [Axis 3] - ([Axis 4] / 2)
+      > One joystick
+      > L: [Axis 3] + ([Axis 4] * 2 / 3)
+      > R: [Axis 3] - ([Axis 4] * 2 / 3)
     > -RC-
-      > L: [Axis 3] + ([Axis 1] / 2)
-      > R: [Axis 3] - ([Axis 1] / 2)
-  > 
+      > Left joystick controls FWD/BKWD movement, right joystick controls turning
+      > What we currently use most often
+      > L: [Axis 3] + ([Axis 1] * 2 / 3)
+      > R: [Axis 3] - ([Axis 1] * 2 / 3)
+    > 2/3 is our preferred turn dampening, allowing precise movement while not sacrificing too much speed
 */
 
 //Constants
@@ -121,8 +140,8 @@ void controllerInfo() {
   if (lockButtons == 0) {
     char message[100];
     Controller1.Screen.setCursor(0, 0);
-    strcpy(message, "(X) Color: ");
-    strcat(message, paletteName[team]);
+    strcpy(message, "(X) Color: "); //Essentially {message = ""}
+    strcat(message, paletteName[team]); //Essentially {message += ""}
     Controller1.Screen.print(message);
     Controller1.Screen.newLine();
     strcpy(message, "(A) Auton: ");
@@ -195,16 +214,6 @@ void switchLock(void) {
 }
 /////
 
-//Pneumatics //Not in use right now
-void flipWings() {
-  if (SolenoidPair.value() == false) {
-    SolenoidPair = true;
-  } else {
-    SolenoidPair = false;
-  }
-}
-/////
-
 //Onscreen Button Handler
 void buttons() {
   teamButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
@@ -214,21 +223,21 @@ void buttons() {
 }
 /////
 
-/*
-//Hold Catapult Still //Not in use
-void brakingMech() {
-  if (Controller1.ButtonL2.pressing()) {
-    CatapultL.setStopping(hold);
-    CatapultR.setStopping(hold);
-    CatapultL.stop();
-    CatapultR.stop();
-  } else {
-    CatapultL.setStopping(brake);
-    CatapultR.setStopping(brake);
+//Wing handler
+  bool wingState = false;
+  void flipWings() {
+    wingState = not wingState;
   }
-}
+
+  void handleWings() {
+    if (abs((wingState * -90) - WingL.position(rotationUnits::deg)) > 10) {
+      WingL.spinToPosition((wingState * -90.0), rotationUnits::deg, false);
+    }
+    if (abs((wingState * 90) - WingR.position(rotationUnits::deg)) > 10) {
+      WingR.spinToPosition((wingState * -90.0), rotationUnits::deg, false);
+    }
+  } 
 /////
-*/
 
 //Drive Shortcut
 void driveUp(double lDrive, double rDrive) {
@@ -295,7 +304,7 @@ void pre_auton(void) {
   Controller1.ButtonA.pressed(switchAuton);
   Controller1.ButtonB.pressed(switchControls);
   Controller1.ButtonY.pressed(switchLock);
-  Controller1.ButtonL1.pressed(flipWings);
+  Controller1.ButtonR1.pressed(flipWings);
 
 }
 /////
@@ -308,7 +317,6 @@ void autonomous(void) {
   } else {
     autonFar();
   }
-  //flipWings();
 }
 /////
 
@@ -325,8 +333,9 @@ void userControl(void) {
 
     bool reverseDrive = Controller1.ButtonL1.pressing();
 
-    int trainLVolt = 0.12 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
-    int trainRVolt = 0.12 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
+    // trainL is is lower to account for physical drift in current robot
+    int trainLVolt = 0.100 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
+    int trainRVolt = 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
     int flyVolt = 12 * Controller1.ButtonR2.pressing();
 
     //Spin
@@ -338,6 +347,8 @@ void userControl(void) {
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
     FlyWheel.spin(fwd, flyVolt, voltageUnits::volt);
     wait(20, msec);
+
+    handleWings();
     }
 }
 /////
