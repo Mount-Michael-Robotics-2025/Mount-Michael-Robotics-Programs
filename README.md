@@ -12,6 +12,7 @@
 
 > #### 01/30/24
 > - Added controller display
+> - Tweaked palettes
 
 > #### 02/17/24
 > - Redid comments
