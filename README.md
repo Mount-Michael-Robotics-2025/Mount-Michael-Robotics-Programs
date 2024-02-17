@@ -4,15 +4,15 @@
 
 ## Changelog
 
-### Season '23-'24
+#### Season '23-'24
 
-#### 01/27/24 
-- Published program to Github
-- Added README
+> #### 01/27/24 
+> - Published program to Github
+> - Added README
 
-#### 01/30/24
-- Added controller display
+> #### 01/30/24
+> - Added controller display
 
-#### 02/17/24
-- Redid comments
-- Added wing controls
+> #### 02/17/24
+> - Redid comments
+> - Added wing controls
