@@ -2,6 +2,11 @@
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
+## To Do
+- Switch to pneumatic wings
+- Improve far auton
+- Robot testing UI
+
 ## Changelog
 
 #### Season '23-'24
