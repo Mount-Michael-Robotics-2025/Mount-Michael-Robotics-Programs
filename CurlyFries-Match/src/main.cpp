@@ -260,7 +260,7 @@ void autonClose() {
   MidR.setVelocity(50, pct);
   BackR.setVelocity(50, pct);
 
-  driveUp(3, 3);
+  driveUp(3.5, 3.5);
   driveUp(-2, -2);
 
   FrontL.setVelocity(100, pct);
