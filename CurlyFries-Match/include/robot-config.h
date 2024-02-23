@@ -4,14 +4,14 @@ extern brain Brain;
 
 // VEXcode devices
 extern controller Controller1;
+extern motor SmallL;
+extern motor SmallR;
 extern motor FrontL;
-extern motor MidL;
-extern motor BackL;
-extern motor WingL;
 extern motor FrontR;
+extern motor MidL;
 extern motor MidR;
+extern motor BackL;
 extern motor BackR;
-extern motor WingR;
 extern motor FlyWheel;
 extern digital_out SolenoidPair;
 

@@ -8,15 +8,15 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor FrontL = motor(PORT1, ratio18_1, false);
-motor MidL = motor(PORT2, ratio18_1, false);
-motor BackL = motor(PORT3, ratio18_1, false);
-motor WingL = motor(PORT5, ratio18_1, false);
-motor FrontR = motor(PORT11, ratio18_1, true);
-motor MidR = motor(PORT12, ratio18_1, true);
-motor BackR = motor(PORT13, ratio18_1, true);
-motor WingR = motor(PORT6, ratio18_1, true);
-motor FlyWheel = motor(PORT10, ratio6_1, true);
+motor SmallL = motor(PORT20, ratio18_1, false);
+motor SmallR = motor(PORT19, ratio18_1, true);
+motor FrontL = motor(PORT16, ratio18_1, false);
+motor FrontR = motor(PORT15, ratio18_1, true);
+motor MidL = motor(PORT10, ratio18_1, false);
+motor MidR = motor(PORT9, ratio18_1, true);
+motor BackL = motor(PORT6, ratio18_1, false);
+motor BackR = motor(PORT5, ratio18_1, true);
+motor FlyWheel = motor(PORT1, ratio6_1, true);
 digital_out SolenoidPair = digital_out(Brain.ThreeWirePort.C);
 controller Controller1 = controller(primary);
 

@@ -7,7 +7,7 @@ competition Competition;
 /////
 
 /*  IMPORTANT INFO
-  > Main 4 settings mapped to ABXY controller buttons
+  > Main 4 settings mapped to ABXY controller buttons and brain screen buttons
     > Settings displayed on brain screen and controller screen
     > (A) Auton
       > Changes auton based off of starting location on field
@@ -28,7 +28,7 @@ competition Competition;
       > L: [Axis 3]
       > R: [Axis 2]
     > ARCA (arcade)
-      > One joystick
+      > One joystick controls all directions
       > L: [Axis 3] + ([Axis 4] * 2 / 3)
       > R: [Axis 3] - ([Axis 4] * 2 / 3)
     > -RC-
@@ -42,14 +42,14 @@ competition Competition;
 //Constants
 const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
 const char paletteName[2][6] = {"POLAR", "MOUNT"};
-const char autonName[2][5] = {"AWAY", "NEAR"};
+const char autonName[3][5] = {"AWAY", "NEAR", "SKLS"};
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 /////
 
 //Settings
 int team = 0;
 color paletteCurrent[2] = {palette[team][0], palette[team][1]};
-int autonMode = 0; 
+int autonMode = 2; 
 int controlMode = 0;
 int lockButtons = 0;
 /////
@@ -59,7 +59,7 @@ void switchTeams();
 brainArt::sliderHorizontal teamButton(341, 41, 40, 20, 2, &team, &paletteCurrent[0], &paletteCurrent[1], &switchTeams);
 
 void switchAuton();
-brainArt::sliderVertical autonButton(441, 101, 40, 20, 2, &autonMode, &paletteCurrent[0], &paletteCurrent[1], &switchAuton);
+brainArt::sliderVertical autonButton(441, 101, 40, 20, 3, &autonMode, &paletteCurrent[0], &paletteCurrent[1], &switchAuton);
 
 void switchControls();
 void writeControls() {
@@ -132,7 +132,7 @@ void _RC_() {
   drawTriangle(120, 60, 120);
 }
 
-void (*ctrl_symbol[3])() = {TANK, ARCA, _RC_};
+void (*ctrl_symbol[3])() = {&TANK, &ARCA, &_RC_};
 /////
 
 //Draw UI
@@ -168,6 +168,12 @@ void controllerInfo() {
   }
 }
 
+void writeAutonMode() {
+  Brain.Screen.setPenColor(palette[team][1]);
+  Brain.Screen.setFont(mono20);
+  Brain.Screen.printAt(101, 207, true, autonName[autonMode]);
+}
+
 void art() {
   Brain.Screen.clearScreen(palette[team][0]);
   paletteCurrent[0] = palette[team][0];
@@ -179,6 +185,7 @@ void art() {
   lockButton.drawToScreen();
 
   uiText();
+  writeAutonMode();
 
   ctrl_symbol[controlMode]();
 
@@ -196,7 +203,7 @@ void switchTeams() {
 
 void switchAuton() {
   if (lockButtons == 0) {
-    autonMode = ((autonMode + 1) % 2);
+    autonMode = ((autonMode + 2) % 3);
     art();
   }
 }
@@ -224,71 +231,61 @@ void buttons() {
 /////
 
 //Wing handler
-  bool wingState = false;
   void flipWings() {
-    wingState = not wingState;
+    SolenoidPair.set(not SolenoidPair.value());
   }
-
-  void handleWings() {
-    if (abs((wingState * -90) - WingL.position(rotationUnits::deg)) > 10) {
-      WingL.spinToPosition((wingState * -90.0), rotationUnits::deg, false);
-    }
-    if (abs((wingState * 90) - WingR.position(rotationUnits::deg)) > 10) {
-      WingR.spinToPosition((wingState * -90.0), rotationUnits::deg, false);
-    }
-  } 
 /////
 
-//Drive Shortcut
+//Auton Shortcuts
 void driveUp(double lDrive, double rDrive) {
-  
+  SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
+  SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
   FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
-  MidL.spinFor(fwd,(360 * lDrive), degrees, false);
-  BackL.spinFor(fwd, (360 * lDrive), degrees, false);
   FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
+  MidL.spinFor(fwd,(360 * lDrive), degrees, false);
   MidR.spinFor(fwd, (360 * rDrive), degrees, false);
+  BackL.spinFor(fwd, (360 * lDrive), degrees, false);
   BackR.spinFor(fwd, (360 * rDrive), degrees);
+}
+
+void setDrivetrainV(int vel) {
+  SmallL.setVelocity(vel, pct);
+  SmallR.setVelocity(vel, pct);
+  FrontL.setVelocity(vel, pct);
+  FrontR.setVelocity(vel, pct);
+  MidL.setVelocity(vel, pct);
+  MidR.setVelocity(vel, pct);
+  BackL.setVelocity(vel, pct);
+  BackR.setVelocity(vel, pct);
 }
 /////
 
 //Autonomous Modes
-void autonClose() {
-  FrontL.setVelocity(50, pct);
-  MidL.setVelocity(50, pct);
-  BackL.setVelocity(50, pct);
-  FrontR.setVelocity(50, pct);
-  MidR.setVelocity(50, pct);
-  BackR.setVelocity(50, pct);
+void autonNear() {
+  setDrivetrainV(50);
 
   driveUp(3.5, 3.5);
   driveUp(-2, -2);
 
-  FrontL.setVelocity(100, pct);
-  MidL.setVelocity(100, pct);
-  BackL.setVelocity(100, pct);
-  FrontR.setVelocity(100, pct);
-  MidR.setVelocity(100, pct);
-  BackR.setVelocity(100, pct);
+  setDrivetrainV(100);
 }
 
-void autonFar() {
-  FrontL.setVelocity(50, pct);
-  MidL.setVelocity(50, pct);
-  BackL.setVelocity(50, pct);
-  FrontR.setVelocity(50, pct);
-  MidR.setVelocity(50, pct);
-  BackR.setVelocity(50, pct);
+void autonAway() {
+  setDrivetrainV(50);
 
   driveUp(6, 6);
   driveUp(-2, -2);
-  
-  FrontL.setVelocity(100, pct);
-  MidL.setVelocity(100, pct);
-  BackL.setVelocity(100, pct);
-  FrontR.setVelocity(100, pct);
-  MidR.setVelocity(100, pct);
-  BackR.setVelocity(100, pct);
+
+  setDrivetrainV(100);
 }
+
+void autonSkills() {
+  while (true) {
+    FlyWheel.spin(fwd, 12, voltageUnits::volt);
+  }
+}
+
+void (*autonList[3])() = {autonSkills, autonAway, autonNear};
 /////
 
 //Setup
@@ -312,15 +309,13 @@ void pre_auton(void) {
 //Autonomous Period
 void autonomous(void) {
   SolenoidPair = false;
-  if (autonMode == 1) {
-    autonClose();
-  } else {
-    autonFar();
-  }
+  autonList[autonMode]();
 }
 /////
 
 //User Control
+float driftL = .83; //Adjust for drift in robot
+float driftR = 1;
 void userControl(void) {
   while (true) {
     //Control
@@ -333,22 +328,21 @@ void userControl(void) {
 
     bool reverseDrive = Controller1.ButtonL1.pressing();
 
-    // trainL is is lower to account for physical drift in current robot
-    int trainLVolt = 0.100 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
-    int trainRVolt = 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
+    int trainLVolt = driftL * 0.120 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
+    int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
     int flyVolt = 12 * Controller1.ButtonR2.pressing();
 
     //Spin
+    SmallL.spin(fwd, trainLVolt, voltageUnits::volt);
+    SmallR.spin(fwd, trainRVolt, voltageUnits::volt);
     FrontL.spin(fwd, trainLVolt, voltageUnits::volt);
-    MidL.spin(fwd, trainLVolt, voltageUnits::volt);
-    BackL.spin(fwd, trainLVolt, voltageUnits::volt);
     FrontR.spin(fwd, trainRVolt, voltageUnits::volt);
+    MidL.spin(fwd, trainLVolt, voltageUnits::volt);
     MidR.spin(fwd, trainRVolt, voltageUnits::volt);
+    BackL.spin(fwd, trainLVolt, voltageUnits::volt);
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
     FlyWheel.spin(fwd, flyVolt, voltageUnits::volt);
     wait(20, msec);
-
-    handleWings();
     }
 }
 /////
