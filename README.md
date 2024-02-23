@@ -27,5 +27,5 @@
 
 > #### 02/23/24
 > - Changed wings to Pneumatics
-> - Added Skills auton
+> - Added Skills auton to main program auton selector
 > - Replaced inheritance with composition
