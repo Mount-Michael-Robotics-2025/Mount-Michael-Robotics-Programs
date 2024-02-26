@@ -2,7 +2,13 @@
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
+## For Judges
+- The skills folder is currently unused. Our skills auton is built into the main program.
+- All files are setup (Vex auto-generated) except for the files in the **["src" folder](https://github.com/CurlyFries1970/1970R-Programs/tree/main/CurlyFries-Match/src)**, which are completely written by me.
+- I wrote a quick summary of some program features at the beginning of the **["main.cpp" file](https://github.com/CurlyFries1970/1970R-Programs/blob/main/CurlyFries-Match/src/main.cpp)**.
+
 ## To Do
+
 - Improve far auton
 - Robot testing UI
 
@@ -28,4 +34,4 @@
 > #### 02/23/24
 > - Changed wings to Pneumatics
 > - Added Skills auton to main program auton selector
-> - Replaced inheritance with composition
+> - Began replacing inheritance with composition for UI library
