@@ -9,8 +9,8 @@
 
 ## To Do
 
-- Improve far auton
 - Robot testing UI
+- Improve skills auton
 
 ## Changelog
 
@@ -35,3 +35,6 @@
 > - Changed wings to Pneumatics
 > - Added Skills auton to main program auton selector
 > - Began replacing inheritance with composition for UI library
+
+> #### 02/27/24
+> - Improved far auton
