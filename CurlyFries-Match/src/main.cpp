@@ -42,14 +42,14 @@ competition Competition;
 //Constants
 const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
 const char paletteName[2][6] = {"POLAR", "MOUNT"};
-const char autonName[3][5] = {"AWAY", "NEAR", "SKLS"};
+const char autonName[3][5] = {"SKLS", "AWAY", "NEAR"};
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 /////
 
 //Settings
 int team = 0;
 color paletteCurrent[2] = {palette[team][0], palette[team][1]};
-int autonMode = 2; 
+int autonMode = 1; 
 int controlMode = 0;
 int lockButtons = 0;
 /////
@@ -238,14 +238,25 @@ void buttons() {
 
 //Auton Shortcuts
 void driveUp(double lDrive, double rDrive) {
-  SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
-  SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
-  FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
-  FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
-  MidL.spinFor(fwd,(360 * lDrive), degrees, false);
-  MidR.spinFor(fwd, (360 * rDrive), degrees, false);
-  BackL.spinFor(fwd, (360 * lDrive), degrees, false);
-  BackR.spinFor(fwd, (360 * rDrive), degrees);
+  if (abs(rDrive) > abs(lDrive)) {
+    SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
+    SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
+    FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
+    FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
+    MidL.spinFor(fwd,(360 * lDrive), degrees, false);
+    MidR.spinFor(fwd, (360 * rDrive), degrees, false);
+    BackL.spinFor(fwd, (360 * lDrive), degrees, false);
+    BackR.spinFor(fwd, (360 * rDrive), degrees);
+  } else {
+    SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
+    SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
+    FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
+    FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
+    MidR.spinFor(fwd, (360 * rDrive), degrees, false);
+    MidL.spinFor(fwd,(360 * lDrive), degrees, false);
+    BackR.spinFor(fwd, (360 * rDrive), degrees, false);
+    BackL.spinFor(fwd, (360 * lDrive), degrees);
+  }
 }
 
 void setDrivetrainV(int vel) {
@@ -271,10 +282,16 @@ void autonNear() {
 }
 
 void autonAway() {
-  setDrivetrainV(50);
+  setDrivetrainV(100);
 
-  driveUp(6, 6);
+  driveUp(5, 5);
   driveUp(-2, -2);
+  driveUp(0, 2);
+  driveUp(0.5, 0.5);
+  driveUp(4, 0);
+  flipWings();
+  driveUp(3, 3);
+  driveUp(-1.5, -1.5);
 
   setDrivetrainV(100);
 }
@@ -314,7 +331,7 @@ void autonomous(void) {
 /////
 
 //User Control
-float driftL = .83; //Adjust for drift in robot
+float driftL = 1; //Adjust for drift in robot
 float driftR = 1;
 void userControl(void) {
   while (true) {
