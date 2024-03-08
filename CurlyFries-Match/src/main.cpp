@@ -49,9 +49,10 @@ const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
 //Settings
 int team = 0;
 color paletteCurrent[2] = {palette[team][0], palette[team][1]};
-int autonMode = 1; 
-int controlMode = 0;
+int autonMode = 0; 
+int controlMode = 2;
 int lockButtons = 0;
+bool reverseDrive = false; //Reverses what side the program considers to be the front
 /////
 
 //Onscreen Buttons and Sliders
@@ -174,6 +175,10 @@ void writeAutonMode() {
   Brain.Screen.printAt(101, 207, true, autonName[autonMode]);
 }
 
+void drawDirectionArrow() {
+
+}
+
 void art() {
   Brain.Screen.clearScreen(palette[team][0]);
   paletteCurrent[0] = palette[team][0];
@@ -184,10 +189,11 @@ void art() {
   controlButton.drawToScreen();
   lockButton.drawToScreen();
 
+  ctrl_symbol[controlMode]();
+
   uiText();
   writeAutonMode();
-
-  ctrl_symbol[controlMode]();
+  drawDirectionArrow();
 
   controllerInfo();
 }
@@ -208,16 +214,20 @@ void switchAuton() {
   }
 }
 
-void switchControls(void) {
+void switchControls() {
   if (lockButtons == 0) {
     controlMode = ((controlMode + 1) % 3);
     art();
   }
 }
 
-void switchLock(void) {
+void switchLock() {
   lockButtons = ((lockButtons + 1) % 2);
   art();
+}
+
+void switchDirection(void) {
+  reverseDrive = not reverseDrive;
 }
 /////
 
@@ -237,8 +247,8 @@ void buttons() {
 /////
 
 //Auton Shortcuts
-void driveUp(double lDrive, double rDrive) {
-  if (abs(rDrive) > abs(lDrive)) {
+void driveUp(float lDrive, float rDrive) {
+  if (fabsf(rDrive) > fabsf(lDrive)) {
     SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
     SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
     FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
@@ -273,16 +283,13 @@ void setDrivetrainV(int vel) {
 
 //Autonomous Modes
 void autonNear() {
-  setDrivetrainV(50);
-
-  driveUp(3.5, 3.5);
-  driveUp(-2, -2);
-
   setDrivetrainV(100);
+  FlyWheel.setVelocity(100, pct);
+  FlyWheel.spinFor(45, sec);
 }
 
 void autonAway() {
-  setDrivetrainV(100);
+  setDrivetrainV(75);
 
   driveUp(5, 5);
   driveUp(-2, -2);
@@ -297,9 +304,44 @@ void autonAway() {
 }
 
 void autonSkills() {
-  while (true) {
-    FlyWheel.spin(fwd, 12, voltageUnits::volt);
-  }
+  //Get in position
+  setDrivetrainV(75); 
+  driveUp(1.5, 1.5);
+  driveUp(1.1, -1.1);
+  driveUp(-1.3, -1.3);
+
+  //Align and match load
+  setDrivetrainV(50);
+  driveUp(-0.3, 0);
+  driveUp(-0.15, -0.15);
+  FlyWheel.setVelocity(100, pct);
+  FlyWheel.spinFor(40, sec);
+
+  //Move to other side
+  setDrivetrainV(60);
+  driveUp(1.4, 0);
+  driveUp(1.4, 1.4);
+  driveUp(0, 1.05);
+  driveUp(6, 6);
+  driveUp(0, 2);
+  driveUp(1, 1);
+  driveUp(0, 2);
+  driveUp(0.6, 0.6);
+  driveUp(2.5, 0);
+
+  //Score
+  setDrivetrainV(100);
+  flipWings();
+  driveUp(1, 0);
+  driveUp(3.5, 3.5);
+  flipWings();
+  driveUp(-3.5, -3.5);
+  driveUp(0, 1);
+  driveUp(1.3, 0);
+  flipWings();
+  driveUp(3.5, 3.5);
+  driveUp(-2, -2);
+  flipWings();
 }
 
 void (*autonList[3])() = {autonSkills, autonAway, autonNear};
@@ -319,6 +361,7 @@ void pre_auton(void) {
   Controller1.ButtonB.pressed(switchControls);
   Controller1.ButtonY.pressed(switchLock);
   Controller1.ButtonR1.pressed(flipWings);
+  Controller1.ButtonL1.pressed(switchDirection);
 
 }
 /////
@@ -343,7 +386,7 @@ void userControl(void) {
     (Controller1.Axis3.value() - (Controller1.Axis4.value() * 2 / 3)),
     (Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3))};
 
-    bool reverseDrive = Controller1.ButtonL1.pressing();
+    //bool reverseDrive = Controller1.ButtonL1.pressing();
 
     int trainLVolt = driftL * 0.120 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
