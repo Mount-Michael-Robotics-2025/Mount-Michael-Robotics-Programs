@@ -10,7 +10,6 @@
 ## To Do
 
 - Robot testing UI
-- Improve skills auton
 
 ## Changelog
 
@@ -38,3 +37,6 @@
 
 > #### 02/27/24
 > - Improved far auton
+
+> #### 03/06/24
+> - Improved skills auton
