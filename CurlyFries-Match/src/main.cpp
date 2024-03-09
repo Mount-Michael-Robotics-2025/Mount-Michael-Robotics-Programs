@@ -53,6 +53,7 @@ int autonMode = 0;
 int controlMode = 2;
 int lockButtons = 0;
 bool reverseDrive = false; //Reverses what side the program considers to be the front
+bool flyWheelMode = false;
 /////
 
 //Onscreen Buttons and Sliders
@@ -226,8 +227,12 @@ void switchLock() {
   art();
 }
 
-void switchDirection(void) {
+void switchDirection() {
   reverseDrive = not reverseDrive;
+}
+
+void switchFlyWheel() {
+  flyWheelMode = not flyWheelMode;
 }
 /////
 
@@ -284,12 +289,12 @@ void setDrivetrainV(int vel) {
 //Autonomous Modes
 void autonNear() {
   setDrivetrainV(100);
-  FlyWheel.setVelocity(100, pct);
-  FlyWheel.spinFor(45, sec);
+  driveUp(3, 3);
+  driveUp(-2, -2);
 }
 
 void autonAway() {
-  setDrivetrainV(75);
+  setDrivetrainV(85);
 
   driveUp(5, 5);
   driveUp(-2, -2);
@@ -362,6 +367,7 @@ void pre_auton(void) {
   Controller1.ButtonY.pressed(switchLock);
   Controller1.ButtonR1.pressed(flipWings);
   Controller1.ButtonL1.pressed(switchDirection);
+  Controller1.ButtonR2.pressed(switchFlyWheel);
 
 }
 /////
@@ -390,7 +396,7 @@ void userControl(void) {
 
     int trainLVolt = driftL * 0.120 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
-    int flyVolt = 12 * Controller1.ButtonR2.pressing();
+    int flyVolt = 12 * flyWheelMode;
 
     //Spin
     SmallL.spin(fwd, trainLVolt, voltageUnits::volt);
@@ -403,7 +409,7 @@ void userControl(void) {
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
     FlyWheel.spin(fwd, flyVolt, voltageUnits::volt);
     wait(20, msec);
-    }
+  }
 }
 /////
 
