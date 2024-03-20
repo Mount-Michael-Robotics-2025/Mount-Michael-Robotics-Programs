@@ -1,4 +1,4 @@
-# 1970B Programming Journal
+# 1970B Programming Info
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
@@ -52,3 +52,4 @@
 > #### 03/20/24
 > - Switched to 1970B for upcoming season
 > - Began work on PID
+> - Established "Journal" as seperate file
