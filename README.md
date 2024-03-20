@@ -1,4 +1,4 @@
-# 1970R Programming Journal
+# 1970B Programming Journal
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
@@ -16,7 +16,7 @@
 
 ## Changelog
 
-#### Season '23-'24
+#### Season '23 - '24
 
 > #### 01/27/24 
 > - Published program to Github
@@ -43,3 +43,12 @@
 
 > #### 03/06/24
 > - Improved skills auton
+
+> #### 03/09/24
+> - '23 - '24 Season ended 
+
+#### Season '24 - '25
+
+> #### 03/20/24
+> - Switched to 1970B for upcoming season
+> - Began work on PID
