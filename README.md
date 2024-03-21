@@ -13,7 +13,9 @@
 
 ## To Do
 
-- Robot testing UI
+- [X] Reformat for new season
+- [ ] Robot testing UI
+- [ ] PID
 
 ## Changelog
 
