@@ -1,6 +1,6 @@
 # 1970B Programming Journal
 
-## 03/20/24
+### 03/20/24
 
   I have started looking into PIDs to improve our autons. I laid out a skeleton for the process here. 
 
