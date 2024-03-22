@@ -1,6 +1,7 @@
 # 1970B Programming Journal
 
-### 03/20/24
+<details>
+<summary> 03/20/24 </summary>
 
   I have started looking into PIDs to improve our autons. I laid out a skeleton for the process here. 
 
@@ -62,3 +63,33 @@ namespace pid {
 }
 /////
 ```
+</details>
+
+<details>
+<summary> 03/22/24 </summary>
+In anticipation of the upcoming competition, I made a set of functions for a potential mecanum wheel + omniwheel drivetrain. The mecanum wheels would be on the four corners, connected to their own motors in order to achieve basic mecanum motion. The omni wheels would be inbetween the mecanum wheels and add power to forward/backward movement and, theoretically, to diagonal movement too.
+  
+```cpp
+//Theoretical Mecanum Wheel Drive
+int mLeftFront() {
+  return Controller1.Axis3.value() - Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3);
+}
+int mLeftBack() {
+  return Controller1.Axis3.value() + Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3);
+}
+int mLeftCenter() {
+  return (mLeftBack() + mLeftFront()) / 2;
+}
+int mRightFront() {
+  return Controller1.Axis3.value() + Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3);
+}
+int mRightBack() {
+  return Controller1.Axis3.value() - Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3);
+}
+int mRightCenter() {
+  return (mRightBack() + mRightFront()) / 2;
+}
+/////
+```
+
+</details>
