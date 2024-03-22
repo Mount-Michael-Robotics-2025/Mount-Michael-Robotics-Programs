@@ -3,7 +3,8 @@
 <details>
 <summary> 03/20/24 </summary>
 
-  I have started looking into PIDs to improve our autons. I laid out a skeleton for the process here. 
+  I have started looking into PIDs to improve our autons. I laid out a skeleton for the process here.
+  ###### *Future me here. This is absolutely full of errors. I didn't have the robot with me to test the program and it shows.* 🙃
 
 ```cpp
 //PID
