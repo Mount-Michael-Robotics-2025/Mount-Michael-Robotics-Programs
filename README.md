@@ -18,8 +18,8 @@
 - [ ] PID
 
 ## Changelog
-
-#### Season '23 - '24
+<details>
+<summary> <b> Season '23 - '24 </b> </summary>
 
 > #### 01/27/24 
 > - Published program to Github
@@ -49,6 +49,7 @@
 
 > #### 03/09/24
 > - '23 - '24 Season ended 
+</details>
 
 #### Season '24 - '25
 
