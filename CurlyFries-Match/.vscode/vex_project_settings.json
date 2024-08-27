@@ -1,8 +1,8 @@
 {
 	"project": {
-		"name": "CurlyFries-Match-VScode",
+		"name": "CurlyFries-Main",
 		"slot": 1,
-		"description": "Main match program",
+		"description": "Main program, with auton selector",
 		"platform": "V5",
 		"creationDate": "Tue, 27 Aug 2024 13:03:03 GMT",
 		"language": "cpp",
