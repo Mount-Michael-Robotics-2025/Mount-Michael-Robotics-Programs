@@ -289,65 +289,13 @@ void setDrivetrainV(int vel) {
 
 //Autonomous Modes
 void autonNear() {
-  setDrivetrainV(100);
-  driveUp(3, 3);
-  driveUp(-2, -2);
+  pid::travel(3, 3);
 }
 
 void autonAway() {
-  setDrivetrainV(85);
-
-  driveUp(5, 5);
-  driveUp(-2, -2);
-  driveUp(0, 2);
-  driveUp(0.5, 0.5);
-  driveUp(4, 0);
-  flipWings();
-  driveUp(3, 3);
-  driveUp(-1.5, -1.5);
-
-  setDrivetrainV(100);
 }
 
 void autonSkills() {
-  //Get in position
-  setDrivetrainV(75); 
-  driveUp(1.5, 1.5);
-  driveUp(1.1, -1.1);
-  driveUp(-1.3, -1.3);
-
-  //Align and match load
-  setDrivetrainV(50);
-  driveUp(-0.3, 0);
-  driveUp(-0.15, -0.15);
-  FlyWheel.setVelocity(100, pct);
-  FlyWheel.spinFor(40, sec);
-
-  //Move to other side
-  setDrivetrainV(60);
-  driveUp(1.4, 0);
-  driveUp(1.4, 1.4);
-  driveUp(0, 1.05);
-  driveUp(6, 6);
-  driveUp(0, 2);
-  driveUp(1, 1);
-  driveUp(0, 2);
-  driveUp(0.6, 0.6);
-  driveUp(2.5, 0);
-
-  //Score
-  setDrivetrainV(100);
-  flipWings();
-  driveUp(1, 0);
-  driveUp(3.5, 3.5);
-  flipWings();
-  driveUp(-3.5, -3.5);
-  driveUp(0, 1);
-  driveUp(1.3, 0);
-  flipWings();
-  driveUp(3.5, 3.5);
-  driveUp(-2, -2);
-  flipWings();
 }
 
 void (*autonList[3])() = {autonSkills, autonAway, autonNear};
