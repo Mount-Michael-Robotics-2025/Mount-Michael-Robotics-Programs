@@ -1,5 +1,6 @@
 #include "vex.h"
 #include "ui-library-v1.cpp"
+#include "autonPID.h"
 
 using namespace vex;
 
