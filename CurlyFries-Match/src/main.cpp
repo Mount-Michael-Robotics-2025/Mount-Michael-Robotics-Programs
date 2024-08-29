@@ -246,12 +246,6 @@ void buttons() {
 }
 /////
 
-//Wing handler
-  void flipWings() {
-    SolenoidPair.set(not SolenoidPair.value());
-  }
-/////
-
 //Auton Shortcuts
 void driveUp(float lDrive, float rDrive) {
   if (fabsf(rDrive) > fabsf(lDrive)) {
@@ -314,7 +308,6 @@ void pre_auton(void) {
   Controller1.ButtonA.pressed(switchAuton);
   Controller1.ButtonB.pressed(switchControls);
   Controller1.ButtonY.pressed(switchLock);
-  Controller1.ButtonR1.pressed(flipWings);
   Controller1.ButtonL1.pressed(switchDirection);
   Controller1.ButtonR2.pressed(switchFlyWheel);
 
@@ -323,7 +316,6 @@ void pre_auton(void) {
 
 //Autonomous Period
 void autonomous(void) {
-  SolenoidPair = false;
   autonList[autonMode]();
 }
 /////
@@ -345,7 +337,6 @@ void userControl(void) {
 
     int trainLVolt = driftL * 0.120 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
-    int flyVolt = 12 * flyWheelMode;
 
     //Spin
     SmallL.spin(fwd, trainLVolt, voltageUnits::volt);
@@ -356,7 +347,6 @@ void userControl(void) {
     MidR.spin(fwd, trainRVolt, voltageUnits::volt);
     BackL.spin(fwd, trainLVolt, voltageUnits::volt);
     BackR.spin(fwd, trainRVolt, voltageUnits::volt);
-    FlyWheel.spin(fwd, flyVolt, voltageUnits::volt);
     wait(20, msec);
   }
 }

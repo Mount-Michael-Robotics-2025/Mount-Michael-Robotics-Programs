@@ -16,8 +16,6 @@ motor MidL = motor(PORT10, ratio18_1, false);
 motor MidR = motor(PORT9, ratio18_1, true);
 motor BackL = motor(PORT6, ratio18_1, false);
 motor BackR = motor(PORT5, ratio18_1, true);
-motor FlyWheel = motor(PORT1, ratio6_1, true);
-digital_out SolenoidPair = digital_out(Brain.ThreeWirePort.C);
 controller Controller1 = controller(primary);
 
 // VEXcode generated functions

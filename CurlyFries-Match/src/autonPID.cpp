@@ -49,8 +49,6 @@ namespace pid {
       lPower = lError*kP + lIntegral*kI - lDerivative*kD;
       rPower = rError*kP + rIntegral*kI - rDerivative*kD;
 
-      SmallL.spin(fwd, lPower * 12, voltageUnits::volt);
-      SmallR.spin(fwd, rPower * 12, voltageUnits::volt);
       FrontL.spin(fwd, lPower * 12, voltageUnits::volt);
       FrontR.spin(fwd, rPower * 12, voltageUnits::volt);
       MidL.spin(fwd, lPower * 12, voltageUnits::volt);
