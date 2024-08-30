@@ -49,12 +49,8 @@ namespace pid {
       lPower = lError*kP + lIntegral*kI - lDerivative*kD;
       rPower = rError*kP + rIntegral*kI - rDerivative*kD;
 
-      FrontL.spin(fwd, lPower * 12, voltageUnits::volt);
-      FrontR.spin(fwd, rPower * 12, voltageUnits::volt);
-      MidL.spin(fwd, lPower * 12, voltageUnits::volt);
-      MidR.spin(fwd, rPower * 12, voltageUnits::volt);
-      BackL.spin(fwd, lPower * 12, voltageUnits::volt);
-      BackR.spin(fwd, rPower * 12, voltageUnits::volt);
+      DrivetrainL.spin(fwd, lPower * 12, voltageUnits::volt);
+      DrivetrainR.spin(fwd, rPower * 12, voltageUnits::volt);
 
       wait(20, msec);
     }

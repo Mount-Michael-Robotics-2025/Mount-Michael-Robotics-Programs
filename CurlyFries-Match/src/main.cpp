@@ -245,29 +245,17 @@ void buttons() {
 //Auton Shortcuts
 void driveUp(float lDrive, float rDrive) {
   if (fabsf(rDrive) > fabsf(lDrive)) {
-    FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
-    FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
-    MidL.spinFor(fwd,(360 * lDrive), degrees, false);
-    MidR.spinFor(fwd, (360 * rDrive), degrees, false);
-    BackL.spinFor(fwd, (360 * lDrive), degrees, false);
-    BackR.spinFor(fwd, (360 * rDrive), degrees);
+    DrivetrainL.spinFor(fwd, (360 * lDrive), degrees, false);
+    DrivetrainR.spinFor(fwd, (360 * rDrive), degrees);
   } else {
-    FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
-    FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
-    MidR.spinFor(fwd, (360 * rDrive), degrees, false);
-    MidL.spinFor(fwd,(360 * lDrive), degrees, false);
-    BackR.spinFor(fwd, (360 * rDrive), degrees, false);
-    BackL.spinFor(fwd, (360 * lDrive), degrees);
+    DrivetrainR.spinFor(fwd, (360 * rDrive), degrees, false);
+    DrivetrainL.spinFor(fwd, (360 * lDrive), degrees);
   }
 }
 
 void setDrivetrainV(int vel) {
-  FrontL.setVelocity(vel, pct);
-  FrontR.setVelocity(vel, pct);
-  MidL.setVelocity(vel, pct);
-  MidR.setVelocity(vel, pct);
-  BackL.setVelocity(vel, pct);
-  BackR.setVelocity(vel, pct);
+  DrivetrainL.setVelocity(vel, pct);
+  DrivetrainR.setVelocity(vel, pct);
 }
 /////
 
@@ -327,12 +315,8 @@ void userControl(void) {
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
 
     //Spin
-    FrontL.spin(fwd, trainLVolt, voltageUnits::volt);
-    FrontR.spin(fwd, trainRVolt, voltageUnits::volt);
-    MidL.spin(fwd, trainLVolt, voltageUnits::volt);
-    MidR.spin(fwd, trainRVolt, voltageUnits::volt);
-    BackL.spin(fwd, trainLVolt, voltageUnits::volt);
-    BackR.spin(fwd, trainRVolt, voltageUnits::volt);
+    DrivetrainL.spin(fwd, trainLVolt, voltageUnits::volt);
+    DrivetrainR.spin(fwd, trainRVolt, voltageUnits::volt);
     wait(20, msec);
   }
 }
