@@ -17,7 +17,7 @@ competition Competition;
       > Switches how movement is handled
       > Refer to below control schemes
     > (X) Team
-      > Purely cosmetic
+      > Changes team to account for mirrored starting positions
     > (Y) Lock
       > Disables all other buttons, preventing accidental presses mid match
       > Represented on controller by replacing screen button symbols with (Y)
@@ -231,10 +231,6 @@ void switchLock() {
 void switchDirection() {
   reverseDrive = not reverseDrive;
 }
-
-void switchFlyWheel() {
-  flyWheelMode = not flyWheelMode;
-}
 /////
 
 //Onscreen Button Handler
@@ -249,8 +245,6 @@ void buttons() {
 //Auton Shortcuts
 void driveUp(float lDrive, float rDrive) {
   if (fabsf(rDrive) > fabsf(lDrive)) {
-    SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
-    SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
     FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
     FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
     MidL.spinFor(fwd,(360 * lDrive), degrees, false);
@@ -258,8 +252,6 @@ void driveUp(float lDrive, float rDrive) {
     BackL.spinFor(fwd, (360 * lDrive), degrees, false);
     BackR.spinFor(fwd, (360 * rDrive), degrees);
   } else {
-    SmallR.spinFor(fwd, (360 * rDrive), degrees, false);
-    SmallL.spinFor(fwd, (360 * lDrive), degrees, false);
     FrontR.spinFor(fwd, (360 * rDrive), degrees, false);
     FrontL.spinFor(fwd, (360 * lDrive), degrees, false);
     MidR.spinFor(fwd, (360 * rDrive), degrees, false);
@@ -270,8 +262,6 @@ void driveUp(float lDrive, float rDrive) {
 }
 
 void setDrivetrainV(int vel) {
-  SmallL.setVelocity(vel, pct);
-  SmallR.setVelocity(vel, pct);
   FrontL.setVelocity(vel, pct);
   FrontR.setVelocity(vel, pct);
   MidL.setVelocity(vel, pct);
@@ -300,7 +290,6 @@ void pre_auton(void) {
   //Initialize
   vexcodeInit();
   art();
-  SolenoidPair = false;
 
   //Event Listeners
   Brain.Screen.pressed(buttons);
@@ -309,7 +298,6 @@ void pre_auton(void) {
   Controller1.ButtonB.pressed(switchControls);
   Controller1.ButtonY.pressed(switchLock);
   Controller1.ButtonL1.pressed(switchDirection);
-  Controller1.ButtonR2.pressed(switchFlyWheel);
 
 }
 /////
@@ -339,8 +327,6 @@ void userControl(void) {
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
 
     //Spin
-    SmallL.spin(fwd, trainLVolt, voltageUnits::volt);
-    SmallR.spin(fwd, trainRVolt, voltageUnits::volt);
     FrontL.spin(fwd, trainLVolt, voltageUnits::volt);
     FrontR.spin(fwd, trainRVolt, voltageUnits::volt);
     MidL.spin(fwd, trainLVolt, voltageUnits::volt);
