@@ -13,8 +13,9 @@
 ## To Do
 
 - [X] Reformat for new season
+- [X] PID
+- [ ] Tune PID
 - [ ] Robot testing UI
-- [ ] PID
 
 ## Changelog
 <details>
