@@ -1,4 +1,4 @@
-# 1970B Programming Info
+# 1970P Programming Info
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
