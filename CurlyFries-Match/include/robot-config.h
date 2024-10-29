@@ -10,8 +10,8 @@ extern motor FrontR;
 extern motor MidR;
 extern motor BackR;
 
-motor_group DrivetrainL;
-motor_group DrivetrainR;
+extern motor_group DrivetrainL;
+extern motor_group DrivetrainR;
 
 extern controller Controller1;
 
