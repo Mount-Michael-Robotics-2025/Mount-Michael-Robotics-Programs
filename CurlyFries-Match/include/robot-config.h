@@ -10,8 +10,18 @@ extern motor FrontR;
 extern motor MidR;
 extern motor BackR;
 
+extern motor ArmL;
+extern motor ArmR;
+
+extern motor ClawL;
+extern motor ClawR;
+
 extern motor_group DrivetrainL;
 extern motor_group DrivetrainR;
+extern motor_group ArmPair;
+extern motor_group ClawPair;
+
+extern digital_out GoalClamp;
 
 extern controller Controller1;
 
