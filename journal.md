@@ -1,4 +1,4 @@
-# 1970B Programming Journal
+# 1970P Programming Journal
 
 <details>
 <summary> 03/20/24 </summary>
