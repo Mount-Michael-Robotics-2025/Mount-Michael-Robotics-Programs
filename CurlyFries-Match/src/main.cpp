@@ -1,6 +1,6 @@
 #include "vex.h"
-#include "ui-library-v1.cpp"
-#include "autonPID.h"
+#include "ui-library-v1.h"
+#include "autons.h"
 
 using namespace vex;
 
@@ -8,6 +8,7 @@ competition Competition;
 /////
 
 /*  IMPORTANT INFO
+  > Settings have been replaced by a bare bones auton selector, plans are to reincorporate after first semester
   > Main 4 settings mapped to ABXY controller buttons and brain screen buttons
     > Settings displayed on brain screen and controller screen
     > (A) Auton
@@ -41,21 +42,32 @@ competition Competition;
 */
 
 //Constants
+/*
 const color palette[2][2] = {{ClrNavy, ClrWhite}, {ClrMaroon, ClrBlack}}; //{bg color, accent color}
 const char paletteName[2][6] = {"POLAR", "MOUNT"};
 const char autonName[3][5] = {"SKLS", "AWAY", "NEAR"};
 const char controlName[3][5] = {"TANK", "ARCA", "-RC-"};
+*/
+const char autonModeName[3][7] = {"Match", "Skills", "Off"};
+const char autonColorName[2][5] = {"Red", "Blue"};
+const char autonSideName[2][2] = {"+", "-"};
+const char autonVariationName[2][7] = {"Light", "Greedy"};
 /////
 
 //Settings
-int team = 0;
-color paletteCurrent[2] = {palette[team][0], palette[team][1]};
-int autonMode = 0; 
+int autonMode = 0;
+int autonColor = 1;
+//color paletteCurrent[2] = {palette[team][0], palette[team][1]};
+int autonSide = 1; 
+int autonVariation = 0;
+/*
 int controlMode = 2;
 int lockButtons = 0;
+*/
 bool reverseDrive = false; //Reverses what side the program considers to be the front
 /////
 
+/*
 //Onscreen Buttons and Sliders
 void switchTeams();
 brainArt::sliderHorizontal teamButton(341, 41, 40, 20, 2, &team, &paletteCurrent[0], &paletteCurrent[1], &switchTeams);
@@ -69,7 +81,7 @@ void writeControls() {
   Brain.Screen.setFont(mono20);
   Brain.Screen.printAt(341, 207, true, controlName[controlMode]);
 }
-brainArt::buttonHorizontal controlButton(341, 201, 40, 20, &paletteCurrent[0], &paletteCurrent[1], &writeControls, &switchControls);
+brainArt::buttonHorizontalP controlButton(341, 201, 40, 20, &paletteCurrent[0], &paletteCurrent[1], &writeControls, &switchControls);
 
 void switchLock();
 void drawLock() {
@@ -136,40 +148,33 @@ void _RC_() {
 
 void (*ctrl_symbol[3])() = {&TANK, &ARCA, &_RC_};
 /////
+*/
 
 //Draw UI
 void controllerInfo() {
-  if (lockButtons == 0) {
-    char message[100];
-    Controller1.Screen.setCursor(0, 0);
-    strcpy(message, "(X) Color: "); //Essentially {message = ""}
-    strcat(message, paletteName[team]); //Essentially {message += ""}
+  Controller1.Screen.clearScreen();
+  Controller1.Screen.setCursor(0, 0);
+
+  char message[100];
+  strcpy(message, "(A) Auton: ");
+  strcat(message, autonModeName[autonMode]);
+  Controller1.Screen.print(message);
+  Controller1.Screen.newLine();
+
+  if (autonMode == 0) {
+    strcpy(message, autonColorName[autonColor]);
+    strcat(message, " ");
+    strcat(message, autonSideName[autonSide]);
+    strcat(message, " ");
+    strcat(message, autonVariationName[autonVariation]);
     Controller1.Screen.print(message);
     Controller1.Screen.newLine();
-    strcpy(message, "(A) Auton: ");
-    strcat(message, autonName[autonMode]);
-    Controller1.Screen.print(message);
-    Controller1.Screen.newLine();
-    strcpy(message, "(B) Control: ");
-    strcat(message, controlName[controlMode]);
-    Controller1.Screen.print(message);
-  } else {
-    char message[100];
-    Controller1.Screen.setCursor(0, 0);
-    strcpy(message, "(Y) Color: ");
-    strcat(message, paletteName[team]);
-    Controller1.Screen.print(message);
-    Controller1.Screen.newLine();
-    strcpy(message, "(Y) Auton: ");
-    strcat(message, autonName[autonMode]);
-    Controller1.Screen.print(message);
-    Controller1.Screen.newLine();
-    strcpy(message, "(Y) Control: ");
-    strcat(message, controlName[controlMode]);
+    strcpy(message, "(X)  (Y)  (B)");
     Controller1.Screen.print(message);
   }
 }
 
+/*
 void writeAutonMode() {
   Brain.Screen.setPenColor(palette[team][1]);
   Brain.Screen.setFont(mono20);
@@ -179,6 +184,7 @@ void writeAutonMode() {
 void drawDirectionArrow() {
 
 }
+
 
 void art() {
   Brain.Screen.clearScreen(palette[team][0]);
@@ -195,12 +201,15 @@ void art() {
   uiText();
   writeAutonMode();
   drawDirectionArrow();
-
   controllerInfo();
+  
 }
+*/
 /////
 
+
 //Button Actions
+/*
 void switchTeams() {
   if (lockButtons == 0) {
     team = ((team + 1) % 2);
@@ -226,9 +235,34 @@ void switchLock() {
   lockButtons = ((lockButtons + 1) % 2);
   art();
 }
+*/
 
 void switchDirection() {
   reverseDrive = not reverseDrive;
+}
+
+void switchMode() {
+  autonMode++;
+  autonMode %= 3;
+  controllerInfo();
+}
+
+void switchColor() {
+  autonColor++;
+  autonColor %= 2;
+  controllerInfo();
+}
+
+void switchSide() {
+  autonSide++;
+  autonSide %= 2;
+  controllerInfo();
+}
+
+void switchVariation() {
+  autonVariation++;
+  autonVariation %= 2;
+  controllerInfo();
 }
 
 void switchGoalClamp() {
@@ -236,6 +270,7 @@ void switchGoalClamp() {
 }
 /////
 
+/*
 //Onscreen Button Handler
 void buttons() {
   teamButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
@@ -244,61 +279,51 @@ void buttons() {
   lockButton.pressTest(Brain.Screen.xPosition(), Brain.Screen.yPosition());
 }
 /////
-
-//Auton Shortcuts
-void driveUp(float lDrive, float rDrive) {
-  if (fabsf(rDrive) > fabsf(lDrive)) {
-    DrivetrainL.spinFor(fwd, (360 * lDrive), degrees, false);
-    DrivetrainR.spinFor(fwd, (360 * rDrive), degrees);
-  } else {
-    DrivetrainR.spinFor(fwd, (360 * rDrive), degrees, false);
-    DrivetrainL.spinFor(fwd, (360 * lDrive), degrees);
-  }
-}
-
-void setDrivetrainV(int vel) {
-  DrivetrainL.setVelocity(vel, pct);
-  DrivetrainR.setVelocity(vel, pct);
-}
-/////
-
-//Autonomous Modes
-void autonNear() {
-  pid::travel(3, 3);
-}
-
-void autonAway() {
-}
-
-void autonSkills() {
-}
-
-void (*autonList[3])() = {autonSkills, autonAway, autonNear};
-/////
+*/
 
 //Setup
 void pre_auton(void) {
   //Initialize
   vexcodeInit();
-  art();
+  //art();
+  controllerInfo();
 
   //Event Listeners
+  Controller1.ButtonA.pressed(switchMode);
+  Controller1.ButtonX.pressed(switchColor);
+  Controller1.ButtonY.pressed(switchSide);
+  Controller1.ButtonB.pressed(switchVariation);
+  Controller1.ButtonL1.pressed(switchDirection);
+  Controller1.ButtonL2.pressed(switchGoalClamp);
+  /*
   Brain.Screen.pressed(buttons);
   Controller1.ButtonX.pressed(switchTeams);
   Controller1.ButtonA.pressed(switchAuton);
   Controller1.ButtonB.pressed(switchControls);
   Controller1.ButtonY.pressed(switchLock);
-  Controller1.ButtonL2.pressed(switchDirection);
-  Controller1.ButtonL1.pressed(switchGoalClamp);
-
-  ArmPair.setStopping(hold);
-
+  */
 }
 /////
 
 //Autonomous Period
 void autonomous(void) {
-  autonList[autonMode]();
+  if (autonMode == 0) {
+    if (autonSide == 0) {
+      if (autonVariation == 0) {
+        matchAuton::lightP(&autonColor);
+      } else {
+        matchAuton::greedyP(&autonColor);
+      }
+    } else {
+      if (autonVariation == 0) {
+        matchAuton::lightN(&autonColor);
+      } else {
+        matchAuton::greedyN(&autonColor);
+      }
+    }
+  } else if (autonMode == 1) {
+
+  }
 }
 /////
 
@@ -308,6 +333,8 @@ float driftR = 1;
 void userControl(void) {
   while (true) {
     //Control
+
+    /*
     int trainL[3] = {Controller1.Axis3.value(),
     (Controller1.Axis3.value() + (Controller1.Axis4.value() * 2 / 3)),
     (Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3))};
@@ -317,12 +344,16 @@ void userControl(void) {
 
     int trainLVolt = driftL * 0.120 * ((trainL[controlMode] * not reverseDrive) - (trainR[controlMode] * reverseDrive));
     int trainRVolt = driftR * 0.120 * ((trainR[controlMode] * not reverseDrive) - (trainL[controlMode] * reverseDrive));
+    */
+
+    int trainLVolt = driftL * 0.12 * (Controller1.Axis3.value() + (Controller1.Axis1.value() * 2 / 3));
+    int trainRVolt = driftR * 0.12 * (Controller1.Axis3.value() - (Controller1.Axis1.value() * 2 / 3));
 
     //Spin
     DrivetrainL.spin(fwd, trainLVolt, voltageUnits::volt);
     DrivetrainR.spin(fwd, trainRVolt, voltageUnits::volt);
-    ArmPair.spin(fwd, 6 * (Controller1.ButtonR1.pressing() - Controller1.ButtonR2.pressing()), voltageUnits::volt);
-    ClawPair.spin(fwd, 12 * (Controller1.ButtonUp.pressing() - Controller1.ButtonDown.pressing()), voltageUnits::volt);
+    Belt.spin(fwd, 12 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), voltageUnits::volt);
+    Intake.spin(fwd, 12 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), voltageUnits::volt);
     wait(20, msec);
   }
 }

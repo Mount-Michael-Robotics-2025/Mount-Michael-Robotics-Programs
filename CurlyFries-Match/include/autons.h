@@ -1,8 +1,8 @@
 #include "autonPID.h"
 
 namespace matchAuton {
-    void lightL(int* mirror);
-    void lightR(bool* mirror);
-    void greedyL(bool* mirror);
-    void greedyR(bool* mirror);
+    void lightP(int* mirror);
+    void lightN(int* mirror);
+    void greedyP(int* mirror);
+    void greedyN(int* mirror);
 }

@@ -1,19 +1,50 @@
 #include "autonPID.h"
 
 namespace matchAuton {
-    void travelWithMirror(float lDrive, float rDrive, int mirror) {
-        pid::travel((lDrive * !mirror) + (rDrive * mirror), (rDrive * !mirror) + (lDrive * mirror));
+    void lightP(int* mirror) {
+        DrivetrainAll.setVelocity(25, pct);
+        Intake.setVelocity(100, pct);
+        Belt.setVelocity(100, pct);
+        GoalClamp.set(false);
+        directMove::travelInches(-32, -32, *mirror);
+        GoalClamp.set(true);
+        directMove::travelInches(12, 12, *mirror);
+        directMove::travelInches(0, 22, *mirror);
+        directMove::travelInches(8, 8, *mirror);
+        directMove::travelInches(0, 22, *mirror);
+        directMove::travelInches(12, 12, *mirror, false);
+        Intake.spinFor(20 * 360, deg, false);
+        Belt.spinFor((20 * 360), deg);
+        directMove::travelInches(-12, 12, *mirror);
+        directMove::travelInches(48, 6, *mirror);
+        DrivetrainAll.setVelocity(100, pct);
     }
-    void lightL(int* mirror) {
-        travelWithMirror(5, 5, *mirror);
+    void lightN(int* mirror) {
+        DrivetrainAll.setVelocity(25, pct);
+        Intake.setVelocity(100, pct);
+        Belt.setVelocity(100, pct);
+        Belt.setVelocity(100, pct);
+        GoalClamp.set(false);
+        directMove::travelInches(-32, -32, *mirror);
+        GoalClamp.set(true);
+        directMove::travelInches(12, 12, *mirror);
+        directMove::travelInches(22, 0, *mirror);
+        directMove::travelInches(8, 8, *mirror);
+        directMove::travelInches(22, 0, *mirror);
+        directMove::travelInches(12, 12, *mirror, false);
+        Intake.spinFor(20 * 360, deg, false);
+        Belt.spinFor((20 * 360), deg);
+        directMove::travelInches(12, -12, *mirror);
+        directMove::travelInches(48, 6, *mirror);
+        DrivetrainAll.setVelocity(100, pct);
     }
-    void lightR(bool* mirror) {
-
-    }
-    void greedyL(bool* mirror) {
+    void greedyP(int* mirror) {
         
     }
-    void greedyR(bool* mirror) {
+    void greedyN(int* mirror) {
 
     }
+}
+namespace skillsAuton {
+    
 }
