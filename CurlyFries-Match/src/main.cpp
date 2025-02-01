@@ -288,6 +288,8 @@ void pre_auton(void) {
   //art();
   controllerInfo();
 
+  InertialSensor.calibrate(2);
+
   //Event Listeners
   Controller1.ButtonA.pressed(switchMode);
   Controller1.ButtonX.pressed(switchColor);
@@ -352,7 +354,7 @@ void userControl(void) {
     //Spin
     DrivetrainL.spin(fwd, trainLVolt, voltageUnits::volt);
     DrivetrainR.spin(fwd, trainRVolt, voltageUnits::volt);
-    Belt.spin(fwd, 12 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), voltageUnits::volt);
+    Belt.spin(fwd, 8 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), voltageUnits::volt);
     Intake.spin(fwd, 12 * (Controller1.ButtonR2.pressing() - Controller1.ButtonR1.pressing()), voltageUnits::volt);
     wait(20, msec);
   }
