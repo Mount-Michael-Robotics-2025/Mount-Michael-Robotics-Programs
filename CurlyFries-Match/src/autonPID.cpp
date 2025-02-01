@@ -1,4 +1,7 @@
+#include <vector>
+#include <cmath>
 #include "vex.h"
+#include "odometry.h"
 
 using namespace vex;
 
@@ -7,69 +10,75 @@ namespace pid {
   float kI = 0.004;
   float kD = 0;
   
-  float error = 0;
+  float rP = 0.75;
+  
   float integral = 0;
   float derivative = 0;
   float prevError = 0;
   float power = 0;
 
-  float runTime = 0;
-  float distanceTraveled = 0;
-  double velocity = 0; 
+  float lateralError = 0;
+  float rotationError = 0;
+
+  float outputL = 0;
+  float outputR = 0;
 
   double accGtoIPSS(double gUnits) { // G-Units to Inches per Square Seconds
     return gUnits * 386.08858267717;
   }
 
-  void travel(float goalInches, int timeLimit = 999) {
-    prevError = goalInches;
-    error = goalInches;
+  void resetPID() {
     integral = 0;
-
-    runTime = 0;
-    distanceTraveled = 0;
-    velocity = 0;
-
-    InertialSensor.calibrate(2);
-
-    while (fabsf(error) >= 0.5 && runTime < timeLimit) {
-      error = goalInches - distanceTraveled;
-      integral += error;
-      derivative = error - prevError;
-      prevError = error;
-
-      power = error*kP + integral*kI - derivative*kD;
-      DrivetrainAll.spin(fwd, power * 12, voltageUnits::volt);
-
-      runTime += .02;
-      velocity += accGtoIPSS(InertialSensor.acceleration(yaxis)) * .02;
-      distanceTraveled += velocity * .02;
-      wait(20, msec);
-    }
-  }
-  void rotate(float goalDegrees, int timeLimit = 999) { //Counterclockwise
-    prevError = goalDegrees;
-    error = goalDegrees;
-    integral = 0;
-
-    runTime = 0;
-
+    prevError = 0;
     InertialSensor.calibrate(2);
     InertialSensor.resetRotation();
+  }
 
-    while (fabsf(error) >= 0.5 && runTime < timeLimit) {
-      error = goalDegrees - InertialSensor.rotation(deg);
-      integral += error;
-      derivative = error - prevError;
-      prevError = error;
-
-      power = error*kP + integral*kI - derivative*kD;
-      DrivetrainR.spin(fwd, power * 12, volt);
-      DrivetrainL.spin(fwd, -power * 12, volt);
-
-      runTime += .02;
-      wait(20, msec);
+  void lateral() {
+    integral += lateralError;
+    if (prevError == 0) {
+      prevError = lateralError;
     }
+    derivative = lateralError - prevError;
+    prevError = lateralError;
+
+    power = lateralError*kP + integral*kI - derivative*kD;
+    outputL += power * 12;
+    outputR += power * 12;
+  }
+
+  void rotate() { //Counterclockwise
+    power = rotationError*rP;
+    outputR += power * 12;
+    outputL += power * -12;
+  }
+
+  void setGoal(float _lateralError, float _rotationError) {
+    lateralError = _lateralError;
+    rotationError = _rotationError;
+  }
+
+  void loop() {
+    outputL = 0;
+    outputR = 0;
+    lateral();
+    rotate();
+  }
+}
+
+namespace boomerang {
+  float carrotScale = 0.5;
+  std::vector<std::vector<float>> actionPointMatrix;
+  std::vector<std::vector<float>> localActionPointMatrix;
+
+  void setLocalAction() {
+    
+  }
+  void setCarrot() {
+    
+  }
+  void loop() {
+
   }
 }
 

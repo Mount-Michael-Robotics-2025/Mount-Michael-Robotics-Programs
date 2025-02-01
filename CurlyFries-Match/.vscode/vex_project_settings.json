@@ -4,15 +4,15 @@
 		"slot": 1,
 		"description": "Main program, with auton selector",
 		"platform": "V5",
-		"creationDate": "Tue, 27 Aug 2024 13:03:03 GMT",
+		"creationDate": "Sat, 01 Feb 2025 16:42:45 GMT",
 		"language": "cpp",
-		"sdkVersion": "V5_20240223_11_00_00",
+		"sdkVersion": "V5_20240802_15_00_00",
 		"cpp": {
 			"includePath": []
 		}
 	},
 	"extension": {
-		"version": "0.6.0",
+		"version": "0.6.1",
 		"json": 1
 	}
 }
