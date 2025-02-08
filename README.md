@@ -1,4 +1,5 @@
-# 1970P Programming Info
+<details>
+<summary> <h1>1970P Programming Info</h1> </summary>
 
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
 
@@ -61,3 +62,4 @@
 > - Began revamping Notebook
 > - Removed Programming Journal
 > - Resumed usage of Changelog
+</details>
