@@ -63,3 +63,20 @@
 > - Removed Programming Journal
 > - Resumed usage of Changelog
 </details>
+<details>
+<summary> <h1>1970X Programming Info</h1> </summary>
+
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/CurlyFries1970/CurlyFries-Match)
+
+## For Judges
+
+## For Teammates
+
+## To Do
+
+## Changelog
+#### Season '24 - '25
+
+> #### 02/08/25
+> - Added files to shared repository
+</details>
